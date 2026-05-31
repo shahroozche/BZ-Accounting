@@ -238,7 +238,7 @@ bz-accounting/
 اگر باگی مشاهده کردید یا ایده‌ای برای بهبود افزونه دارید:
 
 - از طریق **Issues** گیت‌هاب گزارش دهید
-- یا ایمیل بزنید: `your-email@example.com`
+- یا ایمیل بزنید: `shahroozche32@gmail.com`
 - یا در بخش **Pull Requests** مشارکت کنید
 
 <br>
@@ -261,9 +261,8 @@ bz-accounting/
 
 **Shahrooz Chegini**
 
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/shahroozchegini)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/shahroozchegini)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:your-email@example.com)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/shahroozche)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:shahroozche32@gmail.com)
 
 <br>
 
