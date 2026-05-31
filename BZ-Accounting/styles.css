@@ -1,0 +1,135 @@
+.bzc-wrap, .bzc-settings-wrap {
+    direction: rtl;
+    font-family: 'Vazir', 'Tahoma', sans-serif;
+    background: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.bzc-filters {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.bzc-filters select, .bzc-filters input {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+#bzc-orders-table-container {
+    overflow-x: auto;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.bzc-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+}
+
+.bzc-orders-table th, .bzc-orders-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.bzc-orders-table th {
+    background-color: #2271b1;
+    color: white;
+}
+
+.bzc-orders-table td input {
+    width: 100px;
+    padding: 5px;
+    text-align: center;
+}
+
+.loading {
+    text-align: center;
+    padding: 30px;
+    font-size: 18px;
+    color: #666;
+}
+
+#bzc-summary, #bzc-partners-share {
+    background: #fff;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.partner-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.partner-row input {
+    padding: 5px 8px;
+}
+
+.remove-partner {
+    background: #dc3232;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.range-row {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.range-row input, .range-row select {
+    padding: 4px 8px;
+}
+
+.add-range {
+    margin-top: 10px;
+}
+
+#bzc-save-all-prices {
+    background: #ff9800;
+    border-color: #ff9800;
+}
+
+#bzc-save-all-prices:hover {
+    background: #fb8c00;
+}
+
+.save-buy-price {
+    background: #46b450;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.save-buy-price:hover {
+    background: #3a9a40;
+}
+
+.button-small {
+    font-size: 12px;
+    padding: 2px 8px;
+}
