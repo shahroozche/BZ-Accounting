@@ -1,5 +1,44 @@
 jQuery(document).ready(function($) {
     
+    // ========== توابع کمکی (قبل از استفاده تعریف می‌شوند) ==========
+    
+    function numberFormat(num) {
+        if (num === undefined || num === null) return '0';
+        return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    
+    function getGatewayName(gatewayId) {
+        const gateways = {
+            'cod': 'پرداخت در محل',
+            'zarinpal': 'زرین پال',
+            'payir': 'پی آیر',
+            'idpay': 'آیدی پی',
+            'nextpay': 'نکست پی',
+            'saman': 'سامان',
+            'mellat': 'ملت',
+            'manual': '📝 ثبت دستی',
+            'WC_Gateway_TorobPay': 'ترب پی',
+            'WC_Domino_Zibal_Gateway': 'زیبال',
+            'wc_zibal': 'زیبال',
+            'WCDigiPay': 'دیجی پی'
+        };
+        return gateways[gatewayId] || gatewayId;
+    }
+    
+    function getStatusText(status) {
+        const statusMap = {
+            'wc-processing': '🟡 درحال آماده سازی',
+            'wc-sent': '📦 ارسال شد',
+            'wc-pending': '⏳ در انتظار',
+            'wc-completed': '✅ تکمیل شده',
+            'wc-on-hold': '🔒 در انتظار بررسی',
+            'wc-checkout-draft': '📝 پیش‌نویس'
+        };
+        return statusMap[status] || status;
+    }
+    
+    // ========== تابع اصلی بارگذاری سفارش‌ها ==========
+    
     function loadOrders(year, month, search = '') {
         $('#bzc-orders-table-container').html('<div class="loading">در حال بارگذاری سفارش‌ها...</div>');
         
@@ -10,8 +49,17 @@ jQuery(document).ready(function($) {
             month: month,
             search: search
         }, function(res) {
+            // بررسی وجود خطا در پاسخ
+            if (res.error) {
+                $('#bzc-orders-table-container').html('<div class="loading" style="color: #ff9800;">⚠️ ' + res.error + '</div>');
+                $('#bzc-summary').html('');
+                $('#bzc-partners-share').html('');
+                return;
+            }
+            
+            // بررسی وجود سفارش
             if (!res.orders || res.orders.length === 0) {
-                $('#bzc-orders-table-container').html('<div class="loading">❌ هیچ سفارشی یافت نشد.</div>');
+                $('#bzc-orders-table-container').html('<div class="loading" style="color: #ff9800;">📭 هیچ سفارشی با وضعیت "درحال آماده سازی" یا "ارسال شد" در ماه انتخاب شده یافت نشد.</div>');
                 $('#bzc-summary').html('');
                 $('#bzc-partners-share').html('');
                 return;
@@ -32,7 +80,7 @@ jQuery(document).ready(function($) {
             html += '<th style="padding: 12px;">سود ناخالص</th>';
             html += '<th style="padding: 12px;">وضعیت</th>';
             html += '<th style="padding: 12px;">عملیات</th>';
-            html += '</tr></thead><tbody>';
+            html += '<tr></thead><tbody>';
             
             res.orders.forEach((order, index) => {
                 let rowClass = index % 2 === 0 ? 'background-color: #f9f9f9;' : '';
@@ -54,7 +102,7 @@ jQuery(document).ready(function($) {
                 html += `</tr>`;
             });
             
-            html += '</tbody></table></div>';
+            html += '</tbody></td></div>';
             $('#bzc-orders-table-container').html(html);
             
             // جمع کارمزد از جدول
@@ -124,38 +172,15 @@ jQuery(document).ready(function($) {
             
             partnersHtml += `</div>`;
             $('#bzc-partners-share').html(partnersHtml);
-        }).fail(function() {
-            $('#bzc-orders-table-container').html('<div class="loading" style="color: #dc3232;">❌ خطا در دریافت اطلاعات از سرور</div>');
+        }).fail(function(xhr, status, error) {
+            console.error('خطا:', error);
+            $('#bzc-orders-table-container').html('<div class="loading" style="color: #dc3232;">❌ خطا در دریافت اطلاعات از سرور. لطفاً دوباره تلاش کنید.</div>');
+            $('#bzc-summary').html('');
+            $('#bzc-partners-share').html('');
         });
     }
     
-    function numberFormat(num) {
-        if (num === undefined || num === null) return '0';
-        return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-    
-    function getStatusText(status) {
-        const statusMap = {
-            'wc-processing': '🟡 درحال آماده سازی',
-            'wc-sent': '📦 ارسال شد',
-            'wc-pending': '⏳ در انتظار',
-            'wc-completed': '✅ تکمیل شده',
-            'wc-on-hold': '🔒 در انتظار بررسی',
-            'wc-checkout-draft': '📝 پیش‌نویس'
-        };
-        return statusMap[status] || status;
-    }
-    
-    function getStatusText(status) {
-        const statusMap = {
-            'wc-processing': '🟡 درحال آماده سازی',
-            'wc-sent': '📦 ارسال شد',
-            'wc-completed': '✅ تکمیل شده'
-        };
-        return statusMap[status] || status;
-    }
-    
-    // ذخیره تکی
+    // ========== رویداد ذخیره تکی ==========
     $(document).on('click', '.save-buy-price', function() {
         let row = $(this).closest('tr');
         let orderId = row.data('order-id');
@@ -193,7 +218,7 @@ jQuery(document).ready(function($) {
         });
     });
     
-    // ذخیره همه قیمت‌ها
+    // ========== رویداد ذخیره همه قیمت‌ها ==========
     $('#bzc-save-all-prices').on('click', function() {
         let allPrices = [];
         let hasError = false;
@@ -249,7 +274,7 @@ jQuery(document).ready(function($) {
         });
     });
     
-    // خروجی CSV
+    // ========== خروجی CSV ==========
     $('#bzc-export-csv').on('click', function() {
         let csvRows = [];
         
@@ -266,7 +291,7 @@ jQuery(document).ready(function($) {
             $(this).find('td').each(function(index) {
                 if (index === 5) {
                     let val = $(this).find('input').val();
-                    rowData.push('"' + val.replace(/"/g, '""') + '"');
+                    rowData.push('"' + (val ? val.replace(/"/g, '""') : '') + '"');
                 } else {
                     let text = $(this).text().trim();
                     rowData.push('"' + text.replace(/"/g, '""') + '"');
@@ -306,16 +331,19 @@ jQuery(document).ready(function($) {
         URL.revokeObjectURL(url);
     });
     
-    // رویدادها
+    // ========== رویدادهای اصلی ==========
     $('#bzc-refresh').on('click', function() {
-        loadOrders($('#bzc-year').val(), $('#bzc-month').val(), $('#bzc-search').val());
+        let year = $('#bzc-year').val();
+        let month = $('#bzc-month').val();
+        let search = $('#bzc-search').val();
+        loadOrders(year, month, search);
     });
     
     $('#bzc-search').on('keypress', function(e) {
         if (e.which === 13) $('#bzc-refresh').click();
     });
     
-    // بخش تنظیمات - شرکا
+    // ========== بخش تنظیمات - شرکا ==========
     $('#add-partner').on('click', function() {
         let template = $('.partner-row.template').clone().removeClass('template').show();
         $('#partners-list').append(template);
@@ -325,7 +353,7 @@ jQuery(document).ready(function($) {
         $(this).closest('.partner-row').remove();
     });
     
-    // تنظیمات - رنج‌ها
+    // ========== تنظیمات - رنج‌ها ==========
     $(document).on('click', '.add-range', function() {
         let gatewayId = $(this).data('gateway');
         let container = $(`.ranges-container[data-gateway="${gatewayId}"]`);
@@ -366,9 +394,11 @@ jQuery(document).ready(function($) {
     
     $('.fee-type').each(function() { $(this).trigger('change'); });
     
-    // بارگذاری اولیه
+    // ========== بارگذاری اولیه ==========
     let now = new Date();
-    $('#bzc-year').val(now.getFullYear());
-    $('#bzc-month').val(now.getMonth() + 1);
-    loadOrders(now.getFullYear(), now.getMonth() + 1, '');
+    let currentYear = now.getFullYear();
+    let currentMonth = now.getMonth() + 1;
+    $('#bzc-year').val(currentYear);
+    $('#bzc-month').val(currentMonth);
+    loadOrders(currentYear, currentMonth, '');
 });
