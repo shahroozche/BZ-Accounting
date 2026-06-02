@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.51-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.52-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/WordPress-6.0%2B-21759b.svg" alt="WordPress">
   <img src="https://img.shields.io/badge/WooCommerce-8.0%2B-96588a.svg" alt="WooCommerce">
   <img src="https://img.shields.io/badge/PHP-7.4%2B-777bb4.svg" alt="PHP">
